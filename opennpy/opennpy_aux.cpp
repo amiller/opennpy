@@ -5,11 +5,11 @@
 
 using namespace xn; 
 
-#define CHECK_RC(rc, what)											\
-	if (rc != XN_STATUS_OK)											\
-	{																\
-		printf("%s failed: %s\n", what, xnGetStatusString(rc));		\
-		return rc;													\
+#define CHECK_RC(rc, what)					       \
+	if (rc != XN_STATUS_OK)					       \
+	{							       \
+		printf("%s failed: %s\n", what, xnGetStatusString(rc));\
+		return rc;					       \
 	}
 
 Context context;
@@ -46,7 +46,6 @@ uint8_t *opennpy_sync_get_video(void)
 {
     if (!initialized)
         opennpy_init();
-    context.WaitOneUpdateAll(imageGenerator);
     imageGenerator.GetMetaData(imageData);
     return (uint8_t *)imageData.Data();
 }
@@ -55,9 +54,13 @@ uint16_t *opennpy_sync_get_depth(void)
 {
     if (!initialized)
         opennpy_init();
-    context.WaitOneUpdateAll(depthGenerator);
     depthGenerator.GetMetaData(depthData); 
     return (uint16_t *)depthData.Data();
+}
+
+void opennpy_sync_update(void)
+{
+    context.WaitAnyUpdateAll();
 }
 
 void opennpy_shutdown(void) {
@@ -71,14 +74,36 @@ void opennpy_align_depth_to_rgb(void) {
     depthGenerator.GetAlternativeViewPointCap().SetViewPoint(imageGenerator);
 }
 
-/*
-int main(void) { 
-    XnStatus nRetVal = XN_STATUS_OK;    
-    printf("generating\n"); 
+void estimate_calibration() {
+    XnPoint3D p;
+
+    p.X = 0; p.Y = 0; p.Z = -1;
+    depthGenerator.ConvertRealWorldToProjective(1, &p, &p);
+    double cx = p.X;
+    double cy = p.Y;  
+    printf("cx:%.3lf, cy:%.3lf\n", cx, cy);
+
+    p.X = 1; p.Y = 1; p.Z = -1;
+    depthGenerator.ConvertRealWorldToProjective(1, &p, &p);
+
+    double fx = -(p.X-cx);
+    double fy = p.Y-cy;
+    printf("fx:%.3lf, fy:%.3lf\n", fx, fy);
+
+}
+
+
+int opennpy_test(void) { 
+    if (!initialized)
+	opennpy_init();
+
+    estimate_calibration();
+    opennpy_align_depth_to_rgb();
+    estimate_calibration();
 
     for (int i = 0; i < 5; i++) {
-        unsigned short *depth_ptr = sync_get_depth();
-        unsigned char *rgb_ptr = sync_get_video();
+        unsigned short *depth_ptr = opennpy_sync_get_depth();
+        unsigned char *rgb_ptr = opennpy_sync_get_video();
         FILE * fp = fopen("out.pgm", "w");
 	fprintf(fp, "P5 %d %d 65535\n", 640, 480);
         fwrite(depth_ptr, 640*480*2, 1, fp);
@@ -88,10 +113,10 @@ int main(void) {
         fwrite(rgb_ptr, 640*480*3, 1, fp);
         fclose(fp);
         printf("Here\n");
-        align_depth_to_rgb();
+        opennpy_align_depth_to_rgb();
     }
     // context.StopGeneratingAll(); ... does not work sometimes for me, so just kill it :-/ 
  
     return 0;
 } 
-*/
+

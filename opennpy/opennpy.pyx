@@ -31,8 +31,10 @@ cdef extern from "opennpy_aux.h":
     int opennpy_init()
     void *opennpy_sync_get_video()
     void *opennpy_sync_get_depth()
+    void opennpy_sync_update()
     void opennpy_shutdown()
     void opennpy_align_depth_to_rgb()
+    int opennpy_test()
 
 import_array()
 timestamp = 0
@@ -57,8 +59,14 @@ def sync_get_depth():
     timestamp += 1
     return PyArray_SimpleNewFromData(2, ddims, np.NPY_UINT16, data).copy(), timestamp
 
+def sync_update():
+    opennpy_sync_update()
+
 def sync_stop():
     opennpy_shutdown()
 
 def align_depth_to_rgb():
     opennpy_align_depth_to_rgb()
+
+def test():
+    opennpy_test()

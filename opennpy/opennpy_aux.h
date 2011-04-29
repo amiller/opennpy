@@ -8,8 +8,10 @@ extern "C" {
     int opennpy_init(void);
     uint8_t *opennpy_sync_get_video(void);
     uint16_t *opennpy_sync_get_depth(void);
+    void opennpy_sync_update(void);
     void opennpy_shutdown(void);
     void opennpy_align_depth_to_rgb(void);
+    int opennpy_test(void);
 #ifdef __cplusplus
 }
 #endif
