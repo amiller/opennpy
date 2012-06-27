@@ -29,8 +29,8 @@ cdef extern from "numpy/arrayobject.h":
 
 cdef extern from "opennpy_aux.h":
     int opennpy_init()
-    void *opennpy_sync_get_video()
-    void *opennpy_sync_get_depth()
+    void *opennpy_sync_get_video(int)
+    void *opennpy_sync_get_depth(int)
     void opennpy_sync_update()
     void opennpy_shutdown()
     void opennpy_align_depth_to_rgb()
@@ -43,17 +43,17 @@ cdef np.npy_intp vdims[3]
 ddims[0], ddims[1]  = 480, 640
 vdims[0], vdims[1], vdims[2]  = 480, 640, 3
 
-def sync_get_video():
+def sync_get_video(index=0):
     global timestamp
-    cdef void *data = opennpy_sync_get_video()
+    cdef void *data = opennpy_sync_get_video(index)
     if not data:
         return
     timestamp += 1
     return PyArray_SimpleNewFromData(3, vdims, np.NPY_UINT8, data).copy(), timestamp
 
-def sync_get_depth():
+def sync_get_depth(index=0):
     global timestamp
-    cdef void *data = opennpy_sync_get_depth()
+    cdef void *data = opennpy_sync_get_depth(index)
     if not data:
         return
     timestamp += 1

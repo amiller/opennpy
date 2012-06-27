@@ -6,8 +6,8 @@ extern "C" {
 #endif
     #include <stdint.h>
     int opennpy_init(void);
-    uint8_t *opennpy_sync_get_video(void);
-    uint16_t *opennpy_sync_get_depth(void);
+    uint8_t *opennpy_sync_get_video(int index);
+    uint16_t *opennpy_sync_get_depth(int index);
     void opennpy_sync_update(void);
     void opennpy_shutdown(void);
     void opennpy_align_depth_to_rgb(void);
