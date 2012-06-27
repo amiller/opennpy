@@ -1,6 +1,11 @@
-Opennpy - A libfreenect-sync like interface for OpenNI.  Enables registered image grabbing.
+Opennpy - A libfreenect-sync like interface for OpenNI. Enables registered image grabbing and multiple sensors.
 
-(c) 2011 - Brandyn White <bwhite@dappervision.com>
+(c) 2012
+Brandyn White <bwhite@dappervision.com>
+Andrew Miller <amiller@dappervision.com>
+
 License: GPLv3
 
-Requires: SensorKinect, OpenNI (use unstable branch)
+Requires one (either) of the following:
+   - SensorKinect, OpenNI (use unstable branch)
+   - ROS Kinect, see http://ros.org/wiki/openni_kinect (includes Ubuntu packages)
