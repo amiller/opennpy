@@ -57,11 +57,11 @@ int opennpy_init(void)
     }
 
     // Initialize all the RGB image generators
-    context.EnumerateProductionTrees(XN_NODE_TYPE_IMAGE, NULL, 
+    context.EnumerateProductionTrees(XN_NODE_TYPE_IMAGE, NULL,
                                      image_node_info_list);
     CHECK_RC(nRetVal, "Enumerate image generators");
-    for (xn::NodeInfoList::Iterator nodeIt = image_node_info_list.Begin(); 
-         nodeIt != image_node_info_list.End(); ++nodeIt) {
+    for (xn::NodeInfoList::Iterator nodeIt = image_node_info_list.RBegin(); 
+         nodeIt != image_node_info_list.REnd(); --nodeIt) {
         xn::NodeInfo node = *nodeIt;
 
         nRetVal = context.CreateProductionTree(node);
