@@ -88,22 +88,28 @@ int opennpy_init(void)
 
 uint8_t *opennpy_sync_get_video(int i)
 {
+    static uint8_t buf[640*480*3];
     if (!initialized)
         opennpy_init();
     imageGens[i].StartGenerating();
     imageGens[i].WaitAndUpdateData();
     imageGens[i].GetMetaData(*imageDatas[i]);
-    return (uint8_t *)imageDatas[i]->Data();
+    memcpy(buf, imageDatas[i]->Data(), 640*480*3);
+    //return (uint8_t *)imageDatas[i]->Data();
+    return buf;
 }
 
 uint16_t *opennpy_sync_get_depth(int i)
 {
+    static uint16_t buf[640*480];
     if (!initialized)
         opennpy_init();
     depthGens[i].StartGenerating();
     depthGens[i].WaitAndUpdateData();
     depthGens[i].GetMetaData(*depthDatas[i]);
-    return (uint16_t *)depthDatas[i]->Data();
+    memcpy(buf, depthDatas[i]->Data(), 640*480*2);
+    //return (uint16_t *)depthDatas[i]->Data();
+    return buf;
 }
 
 void opennpy_sync_update(void)
