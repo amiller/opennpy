@@ -91,6 +91,7 @@ uint8_t *opennpy_sync_get_video(int i)
     if (!initialized)
         opennpy_init();
     imageGens[i].StartGenerating();
+    imageGens[i].WaitAndUpdateData();
     imageGens[i].GetMetaData(*imageDatas[i]);
     return (uint8_t *)imageDatas[i]->Data();
 }
@@ -100,13 +101,14 @@ uint16_t *opennpy_sync_get_depth(int i)
     if (!initialized)
         opennpy_init();
     depthGens[i].StartGenerating();
+    depthGens[i].WaitAndUpdateData();
     depthGens[i].GetMetaData(*depthDatas[i]);
     return (uint16_t *)depthDatas[i]->Data();
 }
 
 void opennpy_sync_update(void)
 {
-    context.WaitAnyUpdateAll();
+    //context.WaitAnyUpdateAll();
 }
 
 void opennpy_shutdown(void) {
