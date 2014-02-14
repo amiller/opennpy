@@ -94,9 +94,9 @@ uint8_t *opennpy_sync_get_video(int i)
     imageGens[i].StartGenerating();
     imageGens[i].WaitAndUpdateData();
     imageGens[i].GetMetaData(*imageDatas[i]);
-    memcpy(buf, imageDatas[i]->Data(), 640*480*3);
-    //return (uint8_t *)imageDatas[i]->Data();
-    return buf;
+    //memcpy(buf, imageDatas[i]->Data(), 640*480*3);
+    return (uint8_t *)imageDatas[i]->Data();
+    //return buf;
 }
 
 uint16_t *opennpy_sync_get_depth(int i)
@@ -107,9 +107,9 @@ uint16_t *opennpy_sync_get_depth(int i)
     depthGens[i].StartGenerating();
     depthGens[i].WaitAndUpdateData();
     depthGens[i].GetMetaData(*depthDatas[i]);
-    memcpy(buf, depthDatas[i]->Data(), 640*480*2);
-    //return (uint16_t *)depthDatas[i]->Data();
-    return buf;
+    //memcpy(buf, depthDatas[i]->Data(), 640*480*2);
+    return (uint16_t *)depthDatas[i]->Data();
+    //return buf;
 }
 
 void opennpy_sync_update(void)
